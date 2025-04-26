@@ -10,12 +10,16 @@ data-sync-demos/
 │       └── init.sql
 ├── one_way_realtime/
 │   ├── docker-compose.yml
-│   ├── source_service/
+│   ├── producer/
 │   │   ├── Dockerfile
-│   │   └── app.py
-│   ├── target_service/
+│   │   └── main.py
+│   ├── consumer/
 │   │   ├── Dockerfile
-│   │   └── app.py
+│   │   └── main.py
+│   └── source_db/
+│       └── init.sql
+│   └── target_db/
+│       └── init.sql
 ├── two_way_periodic/
 │   ├── docker-compose.yml
 │   ├── sync_service/
@@ -33,6 +37,6 @@ data-sync-demos/
 ├── README.md
 
 - [one_way_periodic: One-way sync using cron job](one_way_periodic/README.md)
-- [one_way_realtime: One-way sync using webhooks](one_way_realtime/README.md)
+- [one_way_realtime: One-way sync using kafka and trigger](one_way_realtime/README.md)
 - [two_way_periodic: Two-way sync using cron job](two_way_periodic/README.md)
 - [two_way_realtime: Two-way sync using webhooks](two_way_realtime/README.md)
