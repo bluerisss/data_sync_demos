@@ -7,7 +7,7 @@ docker compose up --build
 
 Open a new terminal and access source_db:
 ```bash
-docker exec -it source_db psql -U user -d sourcedb
+docker exec -it source_db_rt psql -U user -d sourcedb
 ```
 
 Insert data:
@@ -18,6 +18,6 @@ UPDATE items SET name = 'Item A Updated' WHERE id = 1;
 
 3. Check target_db:
 ```bash
-docker exec -it target_db psql -U user -d targetdb
+docker exec -it target_db_rt psql -U user -d targetdb
 SELECT * FROM items;
 ```

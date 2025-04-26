@@ -38,5 +38,5 @@ data-sync-demos/
 
 - [one_way_periodic: One-way sync using cron job](one_way_periodic/README.md)
 - [one_way_realtime: One-way sync using kafka and trigger](one_way_realtime/README.md)
-- [two_way_periodic: Two-way sync using cron job](two_way_periodic/README.md)
+- [two_way_periodic: Two-way sync using script sync](two_way_periodic/README.md)
 - [two_way_realtime: Two-way sync using webhooks](two_way_realtime/README.md)

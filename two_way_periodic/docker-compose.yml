@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db_a:
+    image: postgres:14
+    container_name: db_a
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db_a
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  db_b:
+    image: postgres:14
+    container_name: db_b
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db_b
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  sync_service:
+    build: ./app
+    container_name: sync_service
+    environment:
+      DB_A_HOST: db_a
+      DB_B_HOST: db_b
+      DB_USER: user
+      DB_PASS: pass
+      DB_A_NAME: db_a
+      DB_B_NAME: db_b
+      SYNC_INTERVAL: 30
+    depends_on:
+      - db_a
+      - db_b
