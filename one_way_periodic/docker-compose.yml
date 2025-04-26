@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  source_db:
+    image: postgres:15
+    container_name: source_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: sourcedb
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+
+  target_db:
+    image: postgres:15
+    container_name: target_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: targetdb
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5434:5432"
+
+  sync_app:
+    build: ./app
+    container_name: sync_app
+    depends_on:
+      - source_db
+      - target_db
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: ["cron", "-f"]
