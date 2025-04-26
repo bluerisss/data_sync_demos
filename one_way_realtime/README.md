@@ -1,23 +1,29 @@
-1. Run Docker Compose
-```bash
-docker compose up --build
-```
+# One Way Realtime Sync Demo
 
-2. Access source_db to insert data
+- Run Docker Compose
 
-Open a new terminal and access source_db:
-```bash
-docker exec -it source_db_rt psql -U user -d sourcedb
-```
+  ```bash
+  docker compose up --build
+  ```
 
-Insert data:
-```sql
-INSERT INTO items (id, name, updated_at) VALUES (1, 'Item A', NOW());
-UPDATE items SET name = 'Item A Updated' WHERE id = 1;
-```
+- Access source_db to insert data
 
-3. Check target_db:
-```bash
-docker exec -it target_db_rt psql -U user -d targetdb
-SELECT * FROM items;
-```
+  Open a new terminal and access source_db:
+
+  ```bash
+  docker exec -it source_db_rt psql -U user -d sourcedb
+  ```
+
+  Insert data:
+
+  ```sql
+  INSERT INTO items (id, name, updated_at) VALUES (1, 'Item A', NOW());
+  UPDATE items SET name = 'Item A Updated' WHERE id = 1;
+  ```
+
+- Check target_db:
+
+  ```bash
+  docker exec -it target_db_rt psql -U user -d targetdb
+  SELECT * FROM items;
+  ```

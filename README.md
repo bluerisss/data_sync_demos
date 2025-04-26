@@ -1,4 +1,5 @@
 # Folder Structure
+
 data-sync-demos/
 ├── one_way_periodic/
 │   ├── docker-compose.yml  # PostgreSQL + sync app
