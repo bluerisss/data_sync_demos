@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  db_a:
+    image: postgres:14
+    container_name: db_a_rt
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db_a
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  db_b:
+    image: postgres:14
+    container_name: db_b_rt
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db_b
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  producer_a:
+    build: ./producer_a
+    container_name: producer_a
+    environment:
+      DB_HOST: db_a
+      DB_NAME: db_a
+      DB_USER: user
+      DB_PASS: pass
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      TOPIC: a_to_b
+    depends_on:
+      - db_a
+      - kafka
+
+  producer_b:
+    build: ./producer_b
+    container_name: producer_b
+    environment:
+      DB_HOST: db_b
+      DB_NAME: db_b
+      DB_USER: user
+      DB_PASS: pass
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      TOPIC: b_to_a
+    depends_on:
+      - db_b
+      - kafka
+
+  consumer_a:
+    build: ./consumer_a
+    container_name: consumer_a
+    environment:
+      DB_HOST: db_a
+      DB_NAME: db_a
+      DB_USER: user
+      DB_PASS: pass
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      TOPIC: b_to_a
+    depends_on:
+      - db_a
+      - kafka
+
+  consumer_b:
+    build: ./consumer_b
+    container_name: consumer_b
+    environment:
+      DB_HOST: db_b
+      DB_NAME: db_b
+      DB_USER: user
+      DB_PASS: pass
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      TOPIC: a_to_b
+    depends_on:
+      - db_b
+      - kafka
